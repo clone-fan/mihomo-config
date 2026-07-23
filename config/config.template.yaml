@@ -168,6 +168,8 @@ rule-providers:
   # custom rulesets from this repo
   my_direct: {type: http, interval: 86400, behavior: classical, format: yaml, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/ruleset/direct.yaml'}
   my_proxy:  {type: http, interval: 86400, behavior: classical, format: yaml, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/ruleset/proxy.yaml'}
+  private_domain:              { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs' }
+  cn_domain:                   { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs' }
   # Domain_direct
   gamedownload_direct:         { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/category-game-platforms-download@cn.mrs' }
   #Domain
@@ -199,6 +201,8 @@ rule-providers:
   apple_domain:                { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/apple.mrs' }
   geolocation!cn_domain:       { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs'}
   #ip
+  private_ip:                  { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs' }
+  cn_ip:                       { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs' }
   netflix_ip:                  { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/netflix.mrs' }
   telegram_ip:                 { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/telegram.mrs' }
   twitter_ip:                  { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/twitter.mrs' }
@@ -209,17 +213,16 @@ rule-providers:
 rules:
   # 基础规则（勿动）
     #ip
-  - IP-CIDR,10.0.0.0/16, DIRECT,no-resolve
+  - RULE-SET,private_ip,直连,no-resolve
+  - RULE-SET,private_domain,直连
   - IP-CIDR,8.8.8.8/32, 默认代理,no-resolve
   - IP-CIDR,8.8.4.4/32, 默认代理,no-resolve
   - IP-CIDR,1.1.1.1/32, 默认代理,no-resolve
   - IP-CIDR,1.0.0.1/32, 默认代理,no-resolve
-  - IP-CIDR,223.5.5.5/32, DIRECT,no-resolve
     #domain
   - RULE-SET,gamedownload_direct,DIRECT
   - RULE-SET,my_direct,DIRECT
     #domain-suffix
-  - DOMAIN-SUFFIX,gh-proxy.com,DIRECT
     #ban! HTTP/3 (QUIC)
   - AND,((DST-PORT,443),(NETWORK,UDP)),REJECT
   # 自定义拒绝规则
@@ -278,4 +281,6 @@ rules:
   - RULE-SET,twitter_ip,社群app
   - RULE-SET,facebook_ip,社群app
   - RULE-SET,apple_ip,apple
+  - RULE-SET,cn_domain,直连
+  - RULE-SET,cn_ip,直连
   - MATCH,漏网之鱼
