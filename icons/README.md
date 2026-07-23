@@ -1,15 +1,16 @@
 # icons
 
-本目录全量托管图标资源。
-
-- `policy/`：原 Policy-Icon 全量内容（含 `IconSet/` 与嵌套 `dashboard-icons/`）
-- `dashboard/`：原 dashboard-icons 全量内容
-- `used/`：可选精选落地目录
-
-配置默认引用：
+策略组与面板图标资源。
 
 ```text
-.../mihomo-config/main/icons/policy/...
+icons/
+├── policy/      # 策略组图标
+└── dashboard/   # 面板图标
 ```
 
-详见 [docs/ICONS.md](../docs/ICONS.md)。
+config 中图标引用示例：
+
+```text
+https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/...
+https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/dashboard/...
+```

@@ -1,8 +1,9 @@
 # mihomo-config · smart config (sanitized)
 # Source: 10.0.0.2 /etc/mihomo/config.yaml
 # Repo: https://github.com/clone-fan/mihomo-config
-# Replace: REPLACE_ME_AIRPORT_SUBSCRIPTION_URL / REPLACE_ME_SS_PASSWORD / NIC / ports
+# Replace: REPLACE_ME_AIRPORT_SUBSCRIPTION_URL / REPLACE_ME_SS_PASSWORD / NIC / ports if needed
 # mihomo smart: https://github.com/vernesong/mihomo/releases
+# Note: rule order and no-resolve match the live router; secrets are redacted.
 
 ############################################## - ⚓️ 锚点区开始 - ##############################################
 
@@ -114,10 +115,6 @@ dns:
     - tls://8.8.8.8
     - tls://1.1.1.1
 
-  # 自定义 DNS 覆写 (Hosts)
-hosts:
-  'anyrouter.top': '47.246.23.200'
-
 # 策略组
 proxy-groups:
   - {name: 默认代理,            <<: *SD, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Static.png}
@@ -212,17 +209,15 @@ rule-providers:
 rules:
   # 基础规则（勿动）
     #ip
-  - RULE-SET,private_ip,直连,no-resolve
-  - RULE-SET,private_domain,直连
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,private_domain,DIRECT
   - IP-CIDR,8.8.8.8/32, 默认代理,no-resolve
   - IP-CIDR,8.8.4.4/32, 默认代理,no-resolve
   - IP-CIDR,1.1.1.1/32, 默认代理,no-resolve
   - IP-CIDR,1.0.0.1/32, 默认代理,no-resolve
     #domain
   - RULE-SET,gamedownload_direct,DIRECT
-  - RULE-SET,my_direct,DIRECT
-    #domain-suffix
-    #ban! HTTP/3 (QUIC)
+  # ban! HTTP/3 (QUIC)
   - AND,((DST-PORT,443),(NETWORK,UDP)),REJECT
   # 自定义拒绝规则
   - DOMAIN-SUFFIX,adobe.com,REJECT
@@ -280,7 +275,8 @@ rules:
   - RULE-SET,facebook_ip,社群app
   - RULE-SET,apple_ip,apple
    #基础规则（勿动）
-  - RULE-SET,cn_domain,直连
-  - RULE-SET,cn_ip,直连
+  - RULE-SET,my_direct,DIRECT
+  - RULE-SET,cn_domain,DIRECT
+  - RULE-SET,cn_ip,DIRECT
   - MATCH,漏网之鱼
 
