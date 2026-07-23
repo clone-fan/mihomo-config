@@ -1,0 +1,17 @@
+{
+  "base": "svg",
+  "aliases": [
+    "Backend as a Service"
+  ],
+  "categories": [
+    "Cloud-Computing",
+    "Developer-Tools"
+  ],
+  "update": {
+    "timestamp": "2025-08-17T20:27:32.175369",
+    "author": {
+      "id": 31751141,
+      "login": "ColtonIdle"
+    }
+  }
+}
