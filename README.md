@@ -11,8 +11,6 @@ mihomo-config/
 ├── README.md
 ├── .gitignore
 ├── config/config.yaml      # 脱敏后的可运行模板（顺序 / no-resolve 与线上一致）
-├── rule/direct.yaml        # 自定义直连 domain 文本源
-├── rule/direct.mrs         # 直连 MRS，供 RDM 引用
 ├── rule/proxy.yaml         # 自定义代理 / 小众网站 domain 文本源
 ├── rule/proxy.mrs          # 代理 MRS，供 RDM 引用
 └── icons/
@@ -33,21 +31,20 @@ RulesetDomainMrs: &RDM  {type: http, interval: 86400, behavior: domain, format: 
 
 ```yaml
 rule-providers:
-  my_direct: { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/direct.mrs' }
-  my_proxy:  { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/proxy.mrs' }
+  my_proxy: { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/proxy.mrs' }
 ```
 
 说明：
 
-- `rule/*.yaml` 是 domain 文本源，方便阅读与维护
-- `rule/*.mrs` 是运行时格式，config 只引用 MRS
+- `rule/proxy.yaml` 是 domain 文本源，方便阅读与维护
+- `rule/proxy.mrs` 是运行时格式，config 只引用 MRS
 - domain 写法：`example.com` 精确，`+.example.com` 后缀
+- 当前不再维护 `my_direct` / `direct.yaml`
 
 ## 规则条数
 
 | 文件 | 用途 | domain 约数 |
 |------|------|-------------|
-| rule/direct.yaml + direct.mrs | 自定义直连 | 5 |
 | rule/proxy.yaml + proxy.mrs | 自定义代理 / 小众网站 | 88 |
 
 ## 当前 rules 关键点（与线上一致）
@@ -57,11 +54,8 @@ rule-providers:
 3. 业务分流（moviepilot、github、流媒体、社群等）
 4. `RULE-SET,my_proxy,小众网站`
 5. `geolocation!cn` 与 IP 规则集
-6. **靠后** 的 `RULE-SET,my_direct,DIRECT`
-7. `cn_domain` / `cn_ip` → `DIRECT`
-8. `MATCH,漏网之鱼`
-
-不要把 `my_direct` 提前插到 QUIC/业务规则前面，除非你明确要改分流优先级。
+6. `cn_domain` / `cn_ip` → `DIRECT`
+7. `MATCH,漏网之鱼`
 
 ## 使用方式
 
@@ -82,6 +76,6 @@ https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icon
 
 ## 维护
 
-- 改 domain：先改 `rule/*.yaml`，再生成对应 `*.mrs`
+- 改 domain：先改 `rule/proxy.yaml`，再生成对应 `proxy.mrs`
 - 改分流逻辑：同步改运行机 config，再回写本仓库脱敏模板
 - 公钥仓库不要提交真实订阅、密码、token

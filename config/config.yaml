@@ -162,7 +162,6 @@ proxy-groups:
 
 # 远程规则集
 rule-providers:
-  my_direct:                   { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/direct.mrs' }
   my_proxy:                    { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/proxy.mrs' }
   #Domain_direct
   gamedownload_direct:         { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/category-game-platforms-download@cn.mrs' }
@@ -268,6 +267,9 @@ rules:
     #自定义规则
   - RULE-SET,my_proxy,小众网站
   - RULE-SET,geolocation!cn_domain,国外网站
+  - DOMAIN-KEYWORD,xn--cp3a08l.com,DIRECT
+  - DOMAIN-KEYWORD,gh-proxy.com,DIRECT
+  - DOMAIN-KEYWORD,0762103.xyz,DIRECT
     #ip路由
   - RULE-SET,netflix_ip,流媒体
   - RULE-SET,telegram_ip,社群app
@@ -275,7 +277,6 @@ rules:
   - RULE-SET,facebook_ip,社群app
   - RULE-SET,apple_ip,apple
    #基础规则（勿动）
-  - RULE-SET,my_direct,DIRECT
   - RULE-SET,cn_domain,DIRECT
   - RULE-SET,cn_ip,DIRECT
   - MATCH,漏网之鱼
