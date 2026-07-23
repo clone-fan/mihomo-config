@@ -1,0 +1,18 @@
+{
+  "base": "svg",
+  "aliases": [
+    "security-camera-company",
+    "video-surveillance"
+  ],
+  "categories": [
+    "Smart-Home",
+    "Hardware"
+  ],
+  "update": {
+    "timestamp": "2025-09-28T09:38:41.752362",
+    "author": {
+      "id": 63781622,
+      "login": "Meierschlumpf"
+    }
+  }
+}
