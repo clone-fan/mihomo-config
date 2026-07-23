@@ -1,0 +1,20 @@
+{
+  "base": "svg",
+  "aliases": [],
+  "categories": [],
+  "update": {
+    "timestamp": "2025-09-06T17:13:18.400425",
+    "author": {
+      "id": 168635257,
+      "login": "adolf242"
+    }
+  },
+  "colors": {
+    "light": "issabel-pbx",
+    "dark": "issabel-pbx-dark"
+  },
+  "wordmark": {
+    "light": "issabel-pbx-wordmark",
+    "dark": "issabel-pbx-wordmark-dark"
+  }
+}
