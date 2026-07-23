@@ -19,7 +19,7 @@
 ## 当前统计
 
 - direct: 5（相对 cn.mrs 去重）
-- proxy: 90（已合并二级域）
+- proxy: 88（suffix 28 + exact 60，去宽泛 CDN）
 - overlap: 0
 
 ## 与官方规则集的分工
