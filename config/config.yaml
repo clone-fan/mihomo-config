@@ -1,8 +1,8 @@
-# mihomo-config · smart config template
-# Source: 10.0.0.2 /etc/mihomo/config.yaml (sanitized)
+# mihomo-config · smart config (sanitized)
+# Source: 10.0.0.2 /etc/mihomo/config.yaml
 # Repo: https://github.com/clone-fan/mihomo-config
-# Replace before use: airport subscription URL, home SS password, NIC, ports
-# mihomo smart releases: https://github.com/vernesong/mihomo/releases
+# Replace: REPLACE_ME_AIRPORT_SUBSCRIPTION_URL / REPLACE_ME_SS_PASSWORD / NIC / ports
+# mihomo smart: https://github.com/vernesong/mihomo/releases
 
 ############################################## - ⚓️ 锚点区开始 - ##############################################
 
@@ -165,12 +165,13 @@ proxy-groups:
 
 # 远程规则集
 rule-providers:
-  # custom rulesets from this repo
-  my_direct: {type: file, behavior: classical, path: ./ruleset/direct.yaml}
-  my_proxy:  {type: file, behavior: classical, path: ./ruleset/proxy.yaml}
-  # Domain_direct
+  my_direct: {type: http, interval: 86400, behavior: classical, format: yaml, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/direct.yaml'}
+  my_proxy:  {type: http, interval: 86400, behavior: classical, format: yaml, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/proxy.yaml'}
+  #Domain_direct
   gamedownload_direct:         { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/category-game-platforms-download@cn.mrs' }
   #Domain
+  private_domain:              { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs' }
+  cn_domain:                   { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs' }
   pt!cn_domain:                { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/category-pt@!cn.mrs' }
   ai_Domain:                   { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs' }
   tmdb_domain:                 { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/tmdb.mrs' }
@@ -199,6 +200,8 @@ rule-providers:
   apple_domain:                { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/apple.mrs' }
   geolocation!cn_domain:       { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs'}
   #ip
+  cn_ip:                       { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs' }
+  private_ip:                  { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs' }
   netflix_ip:                  { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/netflix.mrs' }
   telegram_ip:                 { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/telegram.mrs' }
   twitter_ip:                  { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/twitter.mrs' }
@@ -209,17 +212,16 @@ rule-providers:
 rules:
   # 基础规则（勿动）
     #ip
-  - IP-CIDR,10.0.0.0/16, DIRECT,no-resolve
+  - RULE-SET,private_ip,直连,no-resolve
+  - RULE-SET,private_domain,直连
   - IP-CIDR,8.8.8.8/32, 默认代理,no-resolve
   - IP-CIDR,8.8.4.4/32, 默认代理,no-resolve
   - IP-CIDR,1.1.1.1/32, 默认代理,no-resolve
   - IP-CIDR,1.0.0.1/32, 默认代理,no-resolve
-  - IP-CIDR,223.5.5.5/32, DIRECT,no-resolve
     #domain
   - RULE-SET,gamedownload_direct,DIRECT
   - RULE-SET,my_direct,DIRECT
     #domain-suffix
-  - DOMAIN-SUFFIX,gh-proxy.com,DIRECT
     #ban! HTTP/3 (QUIC)
   - AND,((DST-PORT,443),(NETWORK,UDP)),REJECT
   # 自定义拒绝规则
@@ -268,9 +270,8 @@ rules:
   - RULE-SET,speedtest_domain,speedtest
   - RULE-SET,microsoft_domain,microsoft
   - RULE-SET,apple_domain,apple
-    # custom ruleset (niche / multi-hit proxy)
+    #自定义规则
   - RULE-SET,my_proxy,小众网站
-   #基础规则（勿动）
   - RULE-SET,geolocation!cn_domain,国外网站
     #ip路由
   - RULE-SET,netflix_ip,流媒体
@@ -278,4 +279,8 @@ rules:
   - RULE-SET,twitter_ip,社群app
   - RULE-SET,facebook_ip,社群app
   - RULE-SET,apple_ip,apple
+   #基础规则（勿动）
+  - RULE-SET,cn_domain,直连
+  - RULE-SET,cn_ip,直连
   - MATCH,漏网之鱼
+

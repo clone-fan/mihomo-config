@@ -1,7 +1,6 @@
 # secrets / local runtime
 *.secret
 *.local.yaml
-config/config.yaml
 config/config.live.yaml
 .env
 .env.*
@@ -16,5 +15,3 @@ Thumbs.db
 __pycache__/
 *.pyc
 .venv/
-
-# full icon trees under icons/policy and icons/dashboard are tracked
