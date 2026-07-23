@@ -1,0 +1,91 @@
+name: Main CI
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+on:
+  push:
+    branches: [main]
+    
+  # Daily schedule at midnight (00:00 UTC)
+  schedule:
+    - cron: '0 0 * * *'
+    
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./web
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+  # PNPM store location
+  PNPM_STORE_PATH: ~/.local/share/pnpm/store
+  NEXT_PUBLIC_POSTHOG_KEY: phc_fNHNUqEQJHL2DHlwyaPniHOcpEwe8rFPeJEcPbuifC6
+  NEXT_PUBLIC_POSTHOG_HOST: https://hog.ajnart.dev
+  NEXT_PUBLIC_DISABLE_POSTHOG: false
+  NEXT_PUBLIC_POCKETBASE_URL: https://pb.dashboardicons.com
+  CI_MODE: true
+
+jobs:
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          # list of Docker images to use as base name for tags
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=raw,value=latest
+            type=semver,pattern={{version}}
+            # Add date-based tag for scheduled builds
+            type=schedule,pattern={{date 'YYYY.MM.DD'}},enable=${{ github.event_name == 'schedule' }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        env:
+          NEXT_PUBLIC_POCKETBASE_URL: ${{ env.NEXT_PUBLIC_POCKETBASE_URL }}
+        with:
+          platforms: linux/amd64
+          context: ./web
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          no-cache: true
+          build-args: |
+            NEXT_PUBLIC_POSTHOG_KEY=${{ env.NEXT_PUBLIC_POSTHOG_KEY }}
+            NEXT_PUBLIC_POSTHOG_HOST=${{ env.NEXT_PUBLIC_POSTHOG_HOST }}
+            NEXT_PUBLIC_DISABLE_POSTHOG=${{ env.NEXT_PUBLIC_DISABLE_POSTHOG }}
+            NEXT_PUBLIC_POCKETBASE_URL=${{ env.NEXT_PUBLIC_POCKETBASE_URL }}
+            CI_MODE=${{ env.CI_MODE }}
+          secrets: |
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
+
