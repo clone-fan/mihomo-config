@@ -1,0 +1,19 @@
+# minimal snippet
+rule-providers:
+  my_direct:
+    type: http
+    interval: 86400
+    behavior: classical
+    format: yaml
+    url: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/ruleset/direct.yaml
+  my_proxy:
+    type: http
+    interval: 86400
+    behavior: classical
+    format: yaml
+    url: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/ruleset/proxy.yaml
+
+rules:
+  - RULE-SET,my_direct,DIRECT
+  - RULE-SET,my_proxy,小众网站
+  - MATCH,漏网之鱼

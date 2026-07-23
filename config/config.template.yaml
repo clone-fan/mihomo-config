@@ -1,0 +1,281 @@
+# mihomo-config · smart config template
+# Source: 10.0.0.2 /etc/mihomo/config.yaml (sanitized)
+# Repo: https://github.com/clone-fan/mihomo-config
+# Replace before use: airport subscription URL, home SS password, NIC, ports
+# mihomo smart releases: https://github.com/vernesong/mihomo/releases
+
+############################################## - ⚓️ 锚点区开始 - ##############################################
+
+# 锚点 - 远程订阅组
+PProviders: &PP                    {type: http, interval: 3600, proxy: DIRECT, health-check: {enable: true, url: 'https://detectportal.firefox.com/success.txt', interval: 600}, filter: '^(?!.*(群|卡顿|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))'}
+# 锚点 - 策略组
+SelectProxy: &SP                   {type: select, proxies: [默认代理, 狮城策略, 日本策略, 美国策略, cf优选, VPS节点, 全部节点, DIRECT]}
+SelectDefault: &SD                 {type: select, proxies: [香港策略, 狮城策略, 日本策略, 美国策略, cf优选, VPS节点, 全部节点, DIRECT]}
+SelectNode: &SN                    {type: select, proxies: [香港节点, 狮城节点, 日本节点, 美国节点, cf优选, VPS节点, 全部节点, DIRECT]}
+SelectBlack: &SB                   {type: select, proxies: [DIRECT, REJECT, 默认代理, 全部节点]}
+# 锚点 - 时延参数
+TypeSmart: &TA                     {type: smart, interval: 60, lazy: true, timeout: 2000, hidden: true , max-failed-times: 2, uselightgbm: false, collectdata: false, strategy: sticky-sessions, sampling-window: 10, url: "https://detectportal.firefox.com/success.txt"}
+TypeLoadBalanceCH: &TB             {type: load-balance, interval: 60, lazy: true, timeout: 2000, hidden: true, include-all: true, disable-udp: false, max-failed-times: 2, strategy: consistent-hashing, url: 'https://detectportal.firefox.com/success.txt'}
+TypeUrlTest: &TU                   {type: url-test, interval: 60, lazy: true, timeout: 2000, hidden: true, include-all: true, disable-udp: false, max-failed-times: 2, tolerance: 50, url: 'https://detectportal.firefox.com/success.txt'}
+TypeSelect: &TS                    {type: select, hidden: false, include-all: true}
+# 锚点 - 地区
+FilterHK: &HK                      "^(?=.*(?i)(港|🇭🇰))(?!.*(?i)VPS).*$"
+FilterSG: &SG                      "^(?=.*(?i)(坡|🇸🇬))(?!.*(?i)VPS).*$"
+FilterJP: &JP                      "^(?=.*(?i)(日|🇯🇵))(?!.*(?i)VPS).*$"
+FilterUS: &US                      "^(?=.*(?i)(美|🇺🇸))(?!.*(?i)VPS).*$"
+FilterVPS: &VPS                    "^.*(?i)VPS.*$"
+FilterCF: &CF                      "^.*(?i)CF.*$"
+FilterAll: &All                    "^(?!.*(DIRECT|REJECT|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|过滤|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))"
+# 锚点 - 规则集
+RulesetIPcidrMrs: &RIM             {type: http, interval: 86400, behavior: ipcidr, format: mrs}
+RulesetDomainMrs: &RDM             {type: http, interval: 86400, behavior: domain, format: mrs}
+
+############################################## - ⚓️ 锚点区结束 - ############################################## 
+
+#回家
+listeners:
+  - {name: SS-IN, type: shadowsocks, listen: '::', port: 51303, udp: true, password: "REPLACE_ME_SS_PASSWORD", cipher: 2022-blake3-aes-128-gcm}
+
+#机场订阅
+proxy-providers:
+  Airport1: {<<: *PP, url: 'REPLACE_ME_AIRPORT_SUBSCRIPTION_URL'}
+
+# 全局配置
+# 仅供参考，建议用你自己的配置覆盖
+routing-mark: 1
+interface-name: ens18
+mixed-port: 9555
+socks-port: 9666
+redir-port: 9777
+tproxy-port: 9888
+log-level: info
+authentication: [""]
+allow-lan: true
+bind-address: "*"
+ipv6: true
+mode: rule
+find-process-mode: "strict"
+tcp-concurrent: true
+udp: true
+unified-delay: true
+keep-alive-idle: 600
+keep-alive-interval: 15
+disable-keep-alive: false
+geodata-mode: false
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+# 控制面板
+external-controller: 0.0.0.0:9090
+external-ui: "/etc/mihomo/ui"
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+
+# 嗅探
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  force-domain:
+    - "+.*"
+  skip-domain:
+    - Mijia Cloud
+
+# DNS模块
+dns:
+  enable: true
+  listen: 0.0.0.0:9999
+  use-hosts: true
+  prefer-h3: false
+  ipv6: true
+  ipv6-timeout: 300
+  enhanced-mode: fake-ip
+  fake-ip-range: 28.0.0.0/8
+              #  2001:2::/64
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+  default-nameserver:
+    - tls://223.5.5.5
+  proxy-server-nameserver:
+    - tls://223.5.5.5
+  direct-nameserver:
+    - tls://223.5.5.5
+  direct-nameserver-follow-policy: false
+  nameserver:
+    - tls://8.8.8.8
+    - tls://1.1.1.1
+
+  # 自定义 DNS 覆写 (Hosts)
+hosts:
+  'anyrouter.top': '47.246.23.200'
+
+# 策略组
+proxy-groups:
+  - {name: 默认代理,            <<: *SD, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Static.png}
+  - {name: 国外网站,            <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Global.png}
+  - {name: 小众网站,            <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Global.png}
+  - {name: 谷歌play,            <<: *SN, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/dashboard-icons/png/google-play.png}
+  - {name: moviepilot,         <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Global.png}
+  - {name: github,             <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/dashboard-icons/png/github.png}
+  - {name: AI,                 <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/dashboard-icons/png/openai.png}
+  - {name: 流媒体,              <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Streaming!CN.png}
+  - {name: tiktok,             <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/dashboard-icons/png/tiktok.png}
+  - {name: youtube,            <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/YouTube.png}
+  - {name: 社群app,             <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Telegram.png}
+  - {name: steam,              <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/dashboard-icons/png/google-play-games.png}
+  - {name: speedtest,          <<: *SP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Speedtest.png}
+  - {name: microsoft,          <<: *SB, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Microsoft.png}
+  - {name: apple,              <<: *SB, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Apple.png}
+  - {name: 漏网之鱼,            <<: *SB, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Final.png}
+
+# 地区组(非smart请替换锚点TS)
+    #hk
+  - {name: 香港策略,            <<: *TA, proxies: [香港节点, 香港自动, 香港散列], policy-priority: "香港节点:3.0", icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Hong_Kong.png}
+  - {name: 香港节点,            !!merge <<: *TS, filter: *HK, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Hong_Kong.png}
+  - {name: 香港自动,            !!merge <<: *TU, filter: *HK, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Hong_Kong.png}
+  - {name: 香港散列,            !!merge <<: *TB, filter: *HK, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Hong_Kong.png}
+    #jp
+  - {name: 日本策略,            <<: *TA, proxies: [日本节点, 日本自动, 日本散列], policy-priority: "日本节点:3.0", icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Japan.png}
+  - {name: 日本节点,            !!merge <<: *TS, filter: *JP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Japan.png}
+  - {name: 日本自动,            !!merge <<: *TU, filter: *JP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Japan.png}
+  - {name: 日本散列,            !!merge <<: *TB, filter: *JP, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Japan.png}
+    #sg
+  - {name: 狮城策略,            <<: *TA, proxies: [狮城节点, 狮城自动, 狮城散列], policy-priority: "狮城节点:3.0", icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Singapore.png}
+  - {name: 狮城节点,            !!merge <<: *TS, filter: *SG, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Singapore.png}
+  - {name: 狮城自动,            !!merge <<: *TU, filter: *SG, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Singapore.png}
+  - {name: 狮城散列,            !!merge <<: *TB, filter: *SG, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Singapore.png}
+    #us
+  - {name: 美国策略,            <<: *TA, proxies: [美国节点, 美国自动, 美国散列], policy-priority: "美国节点:3.0", icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/United_States.png}
+  - {name: 美国节点,            !!merge <<: *TS, filter: *US, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/United_States.png}
+  - {name: 美国自动,            !!merge <<: *TU, filter: *US, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/United_States.png}
+  - {name: 美国散列,            !!merge <<: *TB, filter: *US, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/United_States.png}
+    #vps
+  - {name: cf优选,              !!merge <<: *TU, filter: *CF, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/dashboard-icons/png/squirrel-servers-manager.png}
+  - {name: VPS节点,             !!merge <<: *TS, filter: *VPS, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/dashboard-icons/png/squirrel-servers-manager.png}
+  - {name: 全部节点,            !!merge <<: *TS, filter: *All, icon: https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icons/policy/IconSet/Color/Clubhouse.png}
+
+# 远程规则集
+rule-providers:
+  # custom rulesets from this repo
+  my_direct: {type: http, interval: 86400, behavior: classical, format: yaml, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/ruleset/direct.yaml'}
+  my_proxy:  {type: http, interval: 86400, behavior: classical, format: yaml, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/ruleset/proxy.yaml'}
+  # Domain_direct
+  gamedownload_direct:         { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/category-game-platforms-download@cn.mrs' }
+  #Domain
+  pt!cn_domain:                { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/category-pt@!cn.mrs' }
+  ai_Domain:                   { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs' }
+  tmdb_domain:                 { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/tmdb.mrs' }
+  tvdb_domain:                 { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/tvdb.mrs' }
+  slack_domain:                { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/slack.mrs' }
+  github_domain:               { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/github.mrs' }
+  tiktok_domain:               { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/tiktok.mrs' }
+  youtube_domain:              { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/youtube.mrs' }
+  netflix_domain:              { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/netflix.mrs' }
+  disney+_domain:              { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/disney.mrs' }
+  hbomax_domain:               { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/hbo.mrs' }
+  Spotify-Domain:              { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/spotify.mrs' }
+  primevideo_domain:           { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/primevideo.mrs' }
+  hulu_domain:                 { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/hulu.mrs' }
+  telegram_domain:             { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/telegram.mrs' }
+  twitter_domain:              { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/x.mrs' }
+  facebook_domain:             { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/facebook.mrs' }
+  instagram_domain:            { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/instagram.mrs' }
+  whatsapp_domain:             { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/whatsapp.mrs' }
+  line_domain:                 { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/line.mrs' }
+  steam_domain:                { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/steam.mrs' }
+  gamedownload_domain:         { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/category-game-platforms-download.mrs' }
+  games_domain:                { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games-!cn.mrs'}
+  speedtest_domain:            { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/speedtest.mrs' }
+  microsoft_domain:            { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/microsoft.mrs' }
+  apple_domain:                { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/apple.mrs' }
+  geolocation!cn_domain:       { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs'}
+  #ip
+  netflix_ip:                  { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/netflix.mrs' }
+  telegram_ip:                 { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/telegram.mrs' }
+  twitter_ip:                  { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/twitter.mrs' }
+  facebook_ip:                 { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/facebook.mrs' }
+  apple_ip:                    { <<: *RIM, url: 'https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs'}
+
+# 路由
+rules:
+  # 基础规则（勿动）
+    #ip
+  - IP-CIDR,10.0.0.0/16, DIRECT,no-resolve
+  - IP-CIDR,8.8.8.8/32, 默认代理,no-resolve
+  - IP-CIDR,8.8.4.4/32, 默认代理,no-resolve
+  - IP-CIDR,1.1.1.1/32, 默认代理,no-resolve
+  - IP-CIDR,1.0.0.1/32, 默认代理,no-resolve
+  - IP-CIDR,223.5.5.5/32, DIRECT,no-resolve
+    #domain
+  - RULE-SET,gamedownload_direct,DIRECT
+  - RULE-SET,my_direct,DIRECT
+    #domain-suffix
+  - DOMAIN-SUFFIX,gh-proxy.com,DIRECT
+    #ban! HTTP/3 (QUIC)
+  - AND,((DST-PORT,443),(NETWORK,UDP)),REJECT
+  # 自定义拒绝规则
+  - DOMAIN-SUFFIX,adobe.com,REJECT
+  - DOMAIN-SUFFIX,adobelogin.com,REJECT
+  - DOMAIN-SUFFIX,adobe.io,REJECT
+  - DOMAIN-SUFFIX,adobeccstatic.com,REJECT
+  - DOMAIN-SUFFIX,adobegenuine.com,REJECT
+  - DOMAIN-SUFFIX,lmlicenses.wip4.adobe.com,REJECT
+  - DOMAIN-SUFFIX,adobestats.io,REJECT
+  - DOMAIN-KEYWORD,adobe,REJECT
+    #谷歌play下载
+  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,谷歌play
+  - DOMAIN-SUFFIX,services.googleapis.cn,谷歌play
+    #moviepilot
+  - RULE-SET,tmdb_domain,moviepilot
+  - RULE-SET,tvdb_domain,moviepilot
+  - RULE-SET,slack_domain,moviepilot
+  - DOMAIN-SUFFIX,fanart.tv,moviepilot
+  - DOMAIN-KEYWORD,hdhive,moviepilot
+  - DOMAIN-KEYWORD,nullbr,moviepilot
+  - DOMAIN-SUFFIX,xmsl.org,moviepilot
+  - DOMAIN-SUFFIX,emby.moe,moviepilot
+  - DOMAIN-SUFFIX,pypi.org,moviepilot
+    #域名路由
+  - RULE-SET,pt!cn_domain,国外网站
+  - RULE-SET,ai_Domain,AI
+  - RULE-SET,github_domain,github
+  - RULE-SET,tiktok_domain,tiktok
+  - RULE-SET,youtube_domain,youtube
+  - RULE-SET,netflix_domain,流媒体
+  - RULE-SET,disney+_domain,流媒体
+  - RULE-SET,hbomax_domain,流媒体
+  - RULE-SET,Spotify-Domain,流媒体
+  - RULE-SET,primevideo_domain,流媒体
+  - RULE-SET,hulu_domain,流媒体
+  - RULE-SET,telegram_domain,社群app
+  - RULE-SET,twitter_domain,社群app
+  - RULE-SET,facebook_domain,社群app
+  - RULE-SET,instagram_domain,社群app
+  - RULE-SET,whatsapp_domain,社群app
+  - RULE-SET,line_domain,社群app
+  - RULE-SET,steam_domain,steam
+  - RULE-SET,gamedownload_domain,steam
+  - RULE-SET,games_domain,steam
+  - RULE-SET,speedtest_domain,speedtest
+  - RULE-SET,microsoft_domain,microsoft
+  - RULE-SET,apple_domain,apple
+    # custom ruleset (niche / multi-hit proxy)
+  - RULE-SET,my_proxy,小众网站
+   #基础规则（勿动）
+  - RULE-SET,geolocation!cn_domain,国外网站
+    #ip路由
+  - RULE-SET,netflix_ip,流媒体
+  - RULE-SET,telegram_ip,社群app
+  - RULE-SET,twitter_ip,社群app
+  - RULE-SET,facebook_ip,社群app
+  - RULE-SET,apple_ip,apple
+  - MATCH,漏网之鱼
