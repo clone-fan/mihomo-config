@@ -165,8 +165,8 @@ proxy-groups:
 
 # 远程规则集
 rule-providers:
-  my_direct: {type: http, interval: 86400, behavior: classical, format: yaml, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/direct.yaml'}
-  my_proxy:  {type: http, interval: 86400, behavior: classical, format: yaml, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/proxy.yaml'}
+  my_direct:                   { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/direct.mrs' }
+  my_proxy:                    { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/rule/proxy.mrs' }
   #Domain_direct
   gamedownload_direct:         { <<: *RDM, url: 'https://gh-proxy.com/raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/category-game-platforms-download@cn.mrs' }
   #Domain

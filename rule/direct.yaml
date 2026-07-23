@@ -1,11 +1,10 @@
-# DIRECT ruleset (slim)
+# DIRECT domain ruleset
 # Generated: 2026-07-24
-# Keep only domains NOT covered by MetaCubeX cn.mrs / private.mrs
-# Dropped 76 entries already covered by cn_domain
-# Behavior: classical
+# Format: domain (for MRS via <<: *RDM)
+# Syntax: example.com exact; +.example.com suffix
 payload:
-  - DOMAIN,cdn.ynuf.aliapp.org
-  - DOMAIN,dash.xn--cp3a08l.com
-  - DOMAIN,ebv4.0762103.xyz
-  - DOMAIN-SUFFIX,gh-proxy.com
-  - DOMAIN-SUFFIX,snssdk.com
+  - cdn.ynuf.aliapp.org
+  - dash.xn--cp3a08l.com
+  - ebv4.0762103.xyz
+  - +.gh-proxy.com
+  - +.snssdk.com
