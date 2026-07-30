@@ -16,3 +16,4 @@ __pycache__/
 *.log
 config.local.yaml
 **/secret*
+.tools/

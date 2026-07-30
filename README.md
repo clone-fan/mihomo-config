@@ -79,3 +79,19 @@ https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icon
 - 改 domain：先改 `rule/proxy.yaml`，再生成对应 `proxy.mrs`
 - 改分流逻辑：同步改运行机 config，再回写本仓库脱敏模板
 - 公钥仓库不要提交真实订阅、密码、token
+
+### 快速添加漏网域名（无需 AI）
+
+网页方式：打开仓库的 **Actions → Quick add proxy domains → Run workflow**，输入域名或网址并选择规则范围。工作流会自动规范化输入、检查重复覆盖、同步生成 `proxy.yaml` / `proxy.mrs` 并提交。GitHub 无法访问局域网设备，完成后在 Zashboard 中刷新 `my_proxy` 即可立即应用。
+
+本机方式（可连带推送和刷新设备）：
+
+```powershell
+.\scripts\add-proxy-domain.ps1 'example.com' -Mode suffix -Publish -RefreshDevice
+```
+
+- `suffix` 生成 `+.example.com`，覆盖该域及所有子域；`exact` 只覆盖输入的主机名。
+- 工具不会猜测注册根域。输入 `www.example.com` 时，后缀规则就是 `+.www.example.com`；要覆盖整站请直接输入 `example.com`。
+- 可一次输入多个域名或完整网址，以空格、逗号或换行分隔。
+- 首次运行会下载固定版本且经过 SHA-256 校验的 Mihomo，仅用于编译 MRS，不会升级设备核心。
+- 控制端需要密钥时，只在当前终端设置 `MIHOMO_SECRET` 环境变量；工具不会显示或保存它。

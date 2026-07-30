@@ -1,0 +1,58 @@
+name: Quick add proxy domains
+
+on:
+  workflow_dispatch:
+    inputs:
+      domains:
+        description: 'Domains or URLs, separated by spaces, commas, or new lines'
+        required: true
+        type: string
+      mode:
+        description: 'Suffix covers this domain and all subdomains; exact covers only this host'
+        required: true
+        default: suffix
+        type: choice
+        options:
+          - suffix
+          - exact
+
+permissions:
+  contents: write
+
+concurrency:
+  group: quick-add-proxy-domains
+  cancel-in-progress: false
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Add and validate domains
+        shell: pwsh
+        env:
+          DOMAIN_INPUT: ${{ inputs.domains }}
+          RULE_MODE: ${{ inputs.mode }}
+        run: ./scripts/add-proxy-domain.ps1 -Domain $env:DOMAIN_INPUT -Mode $env:RULE_MODE
+
+      - name: Commit generated YAML and MRS
+        shell: pwsh
+        run: |
+          git diff --check -- rule/proxy.yaml
+          git add -- rule/proxy.yaml rule/proxy.mrs
+          git diff --cached --quiet
+          $diffExitCode = $LASTEXITCODE
+          if ($diffExitCode -eq 0) {
+            "No commit was needed; every input is already covered." >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+          if ($diffExitCode -ne 1) {
+            throw "git diff failed with exit code $diffExitCode"
+          }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "rule: add proxy domain(s)"
+          git push
+          "Added and published the proxy rule(s). Refresh my_proxy in Zashboard to apply immediately." >> $env:GITHUB_STEP_SUMMARY
