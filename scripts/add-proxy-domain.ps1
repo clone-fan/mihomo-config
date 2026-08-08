@@ -21,6 +21,11 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# Refresh is the full local workflow: publish first, then refresh and verify the device.
+if ($RefreshDevice) {
+    $Publish = $true
+}
+
 $MihomoVersion = 'v1.19.29'
 $MihomoAssets = @{
     windows = @{
@@ -169,6 +174,62 @@ function Get-DeviceRuleCount {
     return [int]$providerResponse.providers.my_proxy.ruleCount
 }
 
+function Invoke-DeviceHitVerification {
+    param(
+        [Parameter(Mandatory = $true)][hashtable]$Headers,
+        [Parameter(Mandatory = $true)][string[]]$HostNames
+    )
+
+    $config = Invoke-RestMethod -Method Get -Uri ([uri]::new($Controller, '/configs')) -Headers $Headers -TimeoutSec 10
+    $proxyPort = 0
+    foreach ($property in @('mixed-port', 'port')) {
+        $candidate = [int]$config.$property
+        if ($candidate -gt 0) {
+            $proxyPort = $candidate
+            break
+        }
+    }
+    if ($proxyPort -le 0) {
+        throw 'Device hit verification requires a non-zero Mihomo mixed-port or HTTP port.'
+    }
+
+    $proxy = "http://$($Controller.Host):$proxyPort"
+    foreach ($hostName in $HostNames) {
+        $requestStatus = 'request-error'
+        try {
+            $response = Invoke-WebRequest -UseBasicParsing -Proxy $proxy -Uri "https://$hostName/" -MaximumRedirection 0 -TimeoutSec 12
+            $requestStatus = [string]$response.StatusCode
+        }
+        catch {
+            # A TLS or HTTP error can still create a valid routed connection; inspect Mihomo below.
+        }
+
+        $hit = @()
+        for ($attempt = 1; $attempt -le 5; $attempt++) {
+            Start-Sleep -Milliseconds 400
+            $current = Invoke-RestMethod -Method Get -Uri ([uri]::new($Controller, '/connections')) -Headers $Headers -TimeoutSec 10
+            $matches = @($current.connections | Where-Object {
+                $metadata = $_.metadata
+                $connectionHost = [string]$metadata.host
+                $sniffHost = [string]$metadata.sniffHost
+                ($connectionHost -match "(?i)(^|\.)$([regex]::Escape($hostName))$") -or
+                    ($sniffHost -match "(?i)(^|\.)$([regex]::Escape($hostName))$")
+            })
+            $latest = @($matches | Sort-Object start -Descending | Select-Object -First 1)
+            if ($latest.Count -gt 0 -and $latest[0].rulePayload -eq 'my_proxy') {
+                $hit = $latest
+                break
+            }
+        }
+
+        if ($hit.Count -eq 0) {
+            throw "Device hit verification failed for $hostName (HTTP $requestStatus)."
+        }
+        $chains = @($hit[0].chains) -join ' -> '
+        Write-Host "Hit: $hostName -> my_proxy (HTTP $requestStatus; $chains)"
+    }
+}
+
 $script:RepoRoot = (Resolve-Path -LiteralPath $RepositoryPath).Path
 $yamlPath = Join-Path $script:RepoRoot 'rule/proxy.yaml'
 $mrsPath = Join-Path $script:RepoRoot 'rule/proxy.mrs'
@@ -311,17 +372,17 @@ if ($Publish -and $rulesToAdd.Count -gt 0) {
     $messageTargets = ($hostNames -join ', ')
     if ($messageTargets.Length -gt 60) { $messageTargets = "$($hostNames.Count) proxy domains" }
     Invoke-Git -Arguments @('commit', '-m', "rule: add $messageTargets", '--only', '--', 'rule/proxy.yaml', 'rule/proxy.mrs') | Out-Null
-    $branch = (Invoke-Git -Arguments @('branch', '--show-current') | Select-Object -First 1).Trim()
+    $branchOutput = Invoke-Git -Arguments @('branch', '--show-current') | Select-Object -First 1
+    $branch = if ($null -eq $branchOutput) { '' } else { ([string]$branchOutput).Trim() }
+    if (-not $branch -and $env:GITHUB_REF_NAME) {
+        $branch = $env:GITHUB_REF_NAME
+    }
     if (-not $branch) { throw 'Cannot publish from a detached HEAD.' }
     Invoke-Git -Arguments @('push', 'origin', "HEAD:$branch") | Out-Null
     Write-Host "Published to origin/$branch."
 }
 
 if ($RefreshDevice) {
-    if ($rulesToAdd.Count -gt 0 -and -not $Publish) {
-        throw '-RefreshDevice requires -Publish when new rules were added.'
-    }
-
     $headers = @{}
     if ($env:MIHOMO_SECRET) {
         $headers.Authorization = "Bearer $($env:MIHOMO_SECRET)"
@@ -341,4 +402,5 @@ if ($RefreshDevice) {
         throw "Device refresh did not reach the expected rule count ($deviceCount/$ruleCount). Run the same command again after the remote cache updates."
     }
     Write-Host "Device provider my_proxy refreshed: $deviceCount rules."
+    Invoke-DeviceHitVerification -Headers $headers -HostNames $hostNames
 }

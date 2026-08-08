@@ -82,16 +82,17 @@ https://gh-proxy.com/raw.githubusercontent.com/clone-fan/mihomo-config/main/icon
 
 ### 快速添加漏网域名（无需 AI）
 
-网页方式：打开仓库的 **Actions → Quick add proxy domains → Run workflow**，输入域名或网址并选择规则范围。工作流会自动规范化输入、检查重复覆盖、同步生成 `proxy.yaml` / `proxy.mrs` 并提交。GitHub 无法访问局域网设备，完成后在 Zashboard 中刷新 `my_proxy` 即可立即应用。
+网页方式：打开仓库的 **Actions → Quick add proxy domains → Run workflow**，只输入域名或网址。工作流固定使用后缀规则，并自动规范化输入、检查重复覆盖、同步生成 `proxy.yaml` / `proxy.mrs` 和提交。GitHub 无法访问局域网设备，完成后在 Zashboard 中刷新 `my_proxy` 即可立即应用。
 
-本机方式（可连带推送和刷新设备）：
+本机完整流程（发布、刷新设备和实际命中核验）：
 
 ```powershell
-.\scripts\add-proxy-domain.ps1 'example.com' -Mode suffix -Publish -RefreshDevice
+.\scripts\add-proxy-domain.ps1 'example.com' -RefreshDevice
 ```
 
-- `suffix` 生成 `+.example.com`，覆盖该域及所有子域；`exact` 只覆盖输入的主机名。
+- 默认生成 `+.example.com`，覆盖该域及所有子域；只有需要精确主机时才额外使用 `-Mode exact`。
 - 工具不会猜测注册根域。输入 `www.example.com` 时，后缀规则就是 `+.www.example.com`；要覆盖整站请直接输入 `example.com`。
 - 可一次输入多个域名或完整网址，以空格、逗号或换行分隔。
 - 首次运行会下载固定版本且经过 SHA-256 校验的 Mihomo，仅用于编译 MRS，不会升级设备核心。
+- `-RefreshDevice` 会自动包含提交推送，并在刷新后通过设备代理访问目标域名，确认新连接命中 `my_proxy`。
 - 控制端需要密钥时，只在当前终端设置 `MIHOMO_SECRET` 环境变量；工具不会显示或保存它。
