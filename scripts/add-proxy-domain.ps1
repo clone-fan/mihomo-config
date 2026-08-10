@@ -195,38 +195,44 @@ function Invoke-DeviceHitVerification {
 
     $proxy = "http://$($Controller.Host):$proxyPort"
     foreach ($hostName in $HostNames) {
-        $requestStatus = 'request-error'
+        $client = [Net.Sockets.TcpClient]::new()
         try {
-            $response = Invoke-WebRequest -UseBasicParsing -Proxy $proxy -Uri "https://$hostName/" -MaximumRedirection 0 -TimeoutSec 12
-            $requestStatus = [string]$response.StatusCode
-        }
-        catch {
-            # A TLS or HTTP error can still create a valid routed connection; inspect Mihomo below.
-        }
-
-        $hit = @()
-        for ($attempt = 1; $attempt -le 5; $attempt++) {
-            Start-Sleep -Milliseconds 400
-            $current = Invoke-RestMethod -Method Get -Uri ([uri]::new($Controller, '/connections')) -Headers $Headers -TimeoutSec 10
-            $matches = @($current.connections | Where-Object {
-                $metadata = $_.metadata
-                $connectionHost = [string]$metadata.host
-                $sniffHost = [string]$metadata.sniffHost
-                ($connectionHost -match "(?i)(^|\.)$([regex]::Escape($hostName))$") -or
-                    ($sniffHost -match "(?i)(^|\.)$([regex]::Escape($hostName))$")
-            })
-            $latest = @($matches | Sort-Object start -Descending | Select-Object -First 1)
-            if ($latest.Count -gt 0 -and $latest[0].rulePayload -eq 'my_proxy') {
-                $hit = $latest
-                break
+            $connectTask = $client.ConnectAsync($Controller.Host, $proxyPort)
+            if (-not $connectTask.Wait(5000)) {
+                throw "Timed out connecting to Mihomo proxy at $proxy."
             }
-        }
+            $stream = $client.GetStream()
+            $request = [Text.Encoding]::ASCII.GetBytes("CONNECT ${hostName}:443 HTTP/1.1`r`nHost: ${hostName}:443`r`nProxy-Connection: keep-alive`r`n`r`n")
+            $stream.Write($request, 0, $request.Length)
+            $stream.Flush()
 
-        if ($hit.Count -eq 0) {
-            throw "Device hit verification failed for $hostName (HTTP $requestStatus)."
+            $hit = @()
+            for ($attempt = 1; $attempt -le 10; $attempt++) {
+                Start-Sleep -Milliseconds 200
+                $current = Invoke-RestMethod -Method Get -Uri ([uri]::new($Controller, '/connections')) -Headers $Headers -TimeoutSec 10
+                $matches = @($current.connections | Where-Object {
+                    $metadata = $_.metadata
+                    $connectionHost = [string]$metadata.host
+                    $sniffHost = [string]$metadata.sniffHost
+                    ($connectionHost -match "(?i)(^|\.)$([regex]::Escape($hostName))$") -or
+                        ($sniffHost -match "(?i)(^|\.)$([regex]::Escape($hostName))$")
+                })
+                $latest = @($matches | Sort-Object start -Descending | Select-Object -First 1)
+                if ($latest.Count -gt 0 -and $latest[0].rulePayload -eq 'my_proxy') {
+                    $hit = $latest
+                    break
+                }
+            }
+
+            if ($hit.Count -eq 0) {
+                throw "Device hit verification failed for $hostName."
+            }
+            $chains = @($hit[0].chains) -join ' -> '
+            Write-Host "Hit: $hostName -> my_proxy ($chains)"
         }
-        $chains = @($hit[0].chains) -join ' -> '
-        Write-Host "Hit: $hostName -> my_proxy (HTTP $requestStatus; $chains)"
+        finally {
+            $client.Dispose()
+        }
     }
 }
 
