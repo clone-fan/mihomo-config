@@ -46,6 +46,7 @@ payload:
   - +.production.cloudflare.docker.com
   - +.registry-1.docker.io
   - +.co.yes.vg
+  - +.www.cun.ai
   - 2605.dadi2026.com
   - airav.io
   - all-api-hub.qixing1217.top
