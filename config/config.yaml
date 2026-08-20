@@ -238,7 +238,6 @@ rules:
   - DOMAIN-KEYWORD,hdhive,moviepilot
   - DOMAIN-KEYWORD,nullbr,moviepilot
   - DOMAIN-SUFFIX,xmsl.org,moviepilot
-  - DOMAIN-SUFFIX,emby.moe,moviepilot
   - DOMAIN-SUFFIX,pypi.org,moviepilot
     #域名路由
   - RULE-SET,pt!cn_domain,国外网站
