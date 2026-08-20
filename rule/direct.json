@@ -1,0 +1,47 @@
+{
+  "rules": [
+    {
+      "domain": [
+        "1ms.run",
+        "anilist.co",
+        "emby.media",
+        "posthog.com",
+        "ldcstore.com",
+        "ldspro.qzz.io",
+        "movie-pilot.org",
+        "qichiyu.com",
+        "scriptcat.org",
+        "models.dev",
+        "httpbin.org",
+        "base64.us",
+        "img.btschool.net",
+        "images2.imgbox.com",
+        "ccswitch.io",
+        "pc.sysbbs.com",
+        "ldoh.105117.xyz",
+        "vibeloft.ai",
+        "ai.centos.hk",
+        "x666.me",
+        "ooioo.work",
+        "www.cun.ai",
+        "free.lyclaude.site",
+        "metapi.lilililwan.xyz",
+        "windhub.cc",
+        "www.mofas.one",
+        "wzw.pp.ua",
+        "co.yes.vg",
+        "88996api.cloud",
+        "agentrouter.org",
+        "gapi.agccam.com",
+        "ana.bandi.so",
+        "api.trancy.org",
+        "all-api-hub.qixing1217.top",
+        "boheapi.668556.xyz",
+        "sub.100xlabs.space",
+        "fastaitoken.com",
+        "www.mb3admin.com"
+      ]
+    }
+  ],
+  "version": 2
+}
