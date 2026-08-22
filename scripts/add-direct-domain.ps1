@@ -12,6 +12,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path -LiteralPath (Split-Path -Parent $PSScriptRoot)).Path
 $jsonPath = Join-Path $repoRoot 'rule/direct.json'
 $srsPath = Join-Path $repoRoot 'rule/direct.srs'
+$proxyPath = Join-Path $repoRoot 'rule/proxy.yaml'
 $singBox = Join-Path (Split-Path -Parent (Split-Path -Parent $repoRoot)) '.tmp/sing-box/sing-box-1.10.7-windows-amd64/sing-box.exe'
 
 function ConvertTo-DomainName([string]$Value) {
@@ -34,6 +35,18 @@ if (-not (Test-Path -LiteralPath $jsonPath) -or -not (Test-Path -LiteralPath $si
 $tokens = @($Domain | ForEach-Object { $_ -split '[\s,;，；]+' } | Where-Object { $_ })
 $hosts = @($tokens | ForEach-Object { ConvertTo-DomainName $_ } | Sort-Object -Unique)
 if ($hosts.Count -eq 0) { throw 'No valid domain was supplied.' }
+
+if (Test-Path -LiteralPath $proxyPath) {
+    $proxyRules = @(Select-String -Path $proxyPath -Pattern '^\s*-\s+(\S+)\s*$' | ForEach-Object { $_.Matches[0].Groups[1].Value })
+    foreach ($domainName in $hosts) {
+        $conflict = $proxyRules | Where-Object {
+            $rule = $_
+            if ($rule.StartsWith('+.')) { $base = $rule.Substring(2); $domainName -eq $base -or $domainName.EndsWith(".$base", [StringComparison]::OrdinalIgnoreCase) }
+            else { $domainName -eq $rule }
+        } | Select-Object -First 1
+        if ($conflict) { throw "Direct/proxy conflict: $domainName is already covered by proxy rule $conflict. Remove it from proxy first." }
+    }
+}
 
 $data = Get-Content -Raw -LiteralPath $jsonPath | ConvertFrom-Json
 $suffixes = [System.Collections.Generic.List[string]]::new()
