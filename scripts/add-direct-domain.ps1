@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory = $true, Position = 0, ValueFromRemainingArguments = $true)]
     [string[]]$Domain,
     [uri]$MosDnsController = 'http://10.0.0.2:9099',
+    [uri]$MihomoController = 'http://10.0.0.2:9090',
     [switch]$RefreshDevice
 )
 
@@ -12,8 +13,10 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path -LiteralPath (Split-Path -Parent $PSScriptRoot)).Path
 $jsonPath = Join-Path $repoRoot 'rule/direct.json'
 $srsPath = Join-Path $repoRoot 'rule/direct.srs'
+$mrsPath = Join-Path $repoRoot 'rule/direct.mrs'
 $proxyPath = Join-Path $repoRoot 'rule/proxy.yaml'
 $singBox = Join-Path (Split-Path -Parent (Split-Path -Parent $repoRoot)) '.tmp/sing-box/sing-box-1.10.7-windows-amd64/sing-box.exe'
+$mihomo = Join-Path $repoRoot '.tools/mihomo-v1.19.29-windows/mihomo.exe'
 
 function ConvertTo-DomainName([string]$Value) {
     $candidate = $Value.Trim().Trim('"', "'")
@@ -28,8 +31,8 @@ function ConvertTo-DomainName([string]$Value) {
     return (($hostName.Split('.') | ForEach-Object { $idn.GetAscii($_) }) -join '.')
 }
 
-if (-not (Test-Path -LiteralPath $jsonPath) -or -not (Test-Path -LiteralPath $singBox)) {
-    throw 'direct.json or pinned sing-box compiler is missing.'
+if (-not (Test-Path -LiteralPath $jsonPath) -or -not (Test-Path -LiteralPath $singBox) -or -not (Test-Path -LiteralPath $mihomo)) {
+    throw 'direct.json or a pinned rule-set compiler is missing.'
 }
 
 $tokens = @($Domain | ForEach-Object { $_ -split '[\s,;，；]+' } | Where-Object { $_ })
@@ -64,13 +67,24 @@ if ($added.Count -gt 0) {
 & $singBox rule-set compile $jsonPath -o $srsPath
 if ($LASTEXITCODE -ne 0) { throw 'direct.srs compilation failed.' }
 $count = @((Get-Content -Raw -LiteralPath $jsonPath | ConvertFrom-Json).rules[0].domain_suffix).Count
+
+$temporaryYaml = [IO.Path]::GetTempFileName()
+try {
+    $yamlLines = @('payload:') + @($data.rules[0].domain_suffix | ForEach-Object { "  - +.$_" })
+    [IO.File]::WriteAllLines($temporaryYaml, $yamlLines, [Text.UTF8Encoding]::new($false))
+    & $mihomo convert-ruleset domain yaml $temporaryYaml $mrsPath
+    if ($LASTEXITCODE -ne 0) { throw 'direct.mrs compilation failed.' }
+}
+finally {
+    Remove-Item -LiteralPath $temporaryYaml -Force -ErrorAction SilentlyContinue
+}
 Write-Host "Validated: $count direct suffix rules"
 if ($added.Count -eq 0) { Write-Host "Already present: $($hosts -join ', ')" }
 
 if ($added.Count -gt 0) {
     git -C $repoRoot diff --check -- rule/direct.json
     if ($LASTEXITCODE -ne 0) { throw 'direct.json diff check failed.' }
-    git -C $repoRoot add -- rule/direct.json rule/direct.srs
+    git -C $repoRoot add -- rule/direct.json rule/direct.srs rule/direct.mrs
     git -C $repoRoot commit -m "rule: add $($hosts -join ', ') to direct"
     if ($LASTEXITCODE -ne 0) { throw 'Git commit failed.' }
     git -C $repoRoot push origin HEAD
@@ -92,4 +106,15 @@ if ($RefreshDevice) {
         throw "MosDNS direct subscription rule count is $statusCount, expected at least $count."
     }
     Write-Host "MosDNS direct subscription verified: $statusCount rules; updated=$($status.last_updated)"
+
+    $headers = @{}
+    if ($env:MIHOMO_SECRET) { $headers.Authorization = "Bearer $($env:MIHOMO_SECRET)" }
+    $providers = Invoke-RestMethod -Method Get -Uri ([uri]::new($MihomoController, '/providers/rules')) -Headers $headers -TimeoutSec 15
+    if ($providers.providers.PSObject.Properties.Name -contains 'direct') {
+        Invoke-RestMethod -Method Put -Uri ([uri]::new($MihomoController, '/providers/rules/direct')) -Headers $headers -TimeoutSec 30 | Out-Null
+        Write-Host 'Mihomo direct provider refreshed.'
+    }
+    else {
+        Write-Warning "Mihomo provider 'direct' is not loaded yet; reload config/config.yaml once to enable it."
+    }
 }
