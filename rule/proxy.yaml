@@ -3,81 +3,84 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.0xpsyche.me
-  - +.1e100cdn.net
-  - +.42w.shop
-  - +.7o7o.cc
-  - +.7r.fit
-  - +.847977.xyz
-  - +.abrdns.com
-  - +.agsv.top
-  - +.agsvpt.com
-  - +.aihub.top
-  - +.aiopenai.app
-  - +.airav.io
-  - +.ajay.app
-  - +.anyrouter.top
-  - +.attemptd.work
-  - +.avbase.net
-  - +.avmoo.website
-  - +.avsox.click
-  - +.azurefd.us
-  - +.byd.skin
-  - +.chybenzun.top
-  - +.compute-pipe.com
-  - +.dadi2026.com
-  - +.datadoghq.com
-  - +.de5.net
-  - +.dicebear.com
-  - +.evomap.ai
-  - +.fc2.com
-  - +.gateway996.com
-  - +.gitkraken.com
-  - +.gitkraken.dev
-  - +.h-e.top
-  - +.hhanclub.net
-  - +.hhhl.cc
-  - +.iconify.design
-  - +.imgccc.com
-  - +.inggairav0.work
-  - +.inggairav1.work
-  - +.inggairav9.com
-  - +.javten.com
-  - +.landian.la
-  - +.linux.do
-  - +.maoyulin.xyz
-  - +.muyuan.do
-  - +.nmnm.fun
-  - +.ntfantasy.us
-  - +.nyc.mn
-  - +.picx.cx
-  - +.production.cloudflare.docker.com
-  - +.registry-1.docker.io
-  - +.restream.io
-  - +.returnyoutubedislikeapi.com
-  - +.revenuecat.com
-  - +.rogsvc.com
-  - +.simplesvg.com
-  - +.smartryan.com
-  - +.sun-panel.top
-  - +.tailwindcss.com
-  - +.theporndb.net
-  - +.unisvg.com
-  - +.useforall.com
-  - +.vipclaude.codes
-  - +.xxlb.net
-  - +.yxxb.eu.cc
-  - +.zeasn.tv
-  - +.agentrouter.org
-  - +.movie-pilot.org
-  - +.readfrog.app
-  - +.cun.ai
-  - +.xn--9kqz23b19z.com
-  - +.runanytime.hxi.me
-  - +.api.42x.shop
-  - +.api.ark717.com
-  - +.api.justwoker.icu
-  - +.fanza.jp
-  - +.happycoding.xyz
-  - +.ultrarouter.org
-  - +.api.bitdrift.io
+  - +.dns11.quad9.net
+  - +.v2.langge.uk
+  - +.v5.langge.uk
+- +.0xpsyche.me
+- +.1e100cdn.net
+- +.42w.shop
+- +.7o7o.cc
+- +.7r.fit
+- +.847977.xyz
+- +.abrdns.com
+- +.agentrouter.org
+- +.agsv.top
+- +.agsvpt.com
+- +.aihub.top
+- +.aiopenai.app
+- +.airav.io
+- +.ajay.app
+- +.anyrouter.top
+- +.api.42x.shop
+- +.api.ark717.com
+- +.api.bitdrift.io
+- +.api.justwoker.icu
+- +.attemptd.work
+- +.avbase.net
+- +.avmoo.website
+- +.avsox.click
+- +.azurefd.us
+- +.byd.skin
+- +.chybenzun.top
+- +.compute-pipe.com
+- +.cun.ai
+- +.dadi2026.com
+- +.datadoghq.com
+- +.de5.net
+- +.dicebear.com
+- +.evomap.ai
+- +.fanza.jp
+- +.fc2.com
+- +.gateway996.com
+- +.gitkraken.com
+- +.gitkraken.dev
+- +.h-e.top
+- +.happycoding.xyz
+- +.hhanclub.net
+- +.hhhl.cc
+- +.iconify.design
+- +.imgccc.com
+- +.inggairav0.work
+- +.inggairav1.work
+- +.inggairav9.com
+- +.javten.com
+- +.landian.la
+- +.linux.do
+- +.maoyulin.xyz
+- +.movie-pilot.org
+- +.muyuan.do
+- +.nmnm.fun
+- +.ntfantasy.us
+- +.nyc.mn
+- +.picx.cx
+- +.production.cloudflare.docker.com
+- +.readfrog.app
+- +.registry-1.docker.io
+- +.restream.io
+- +.returnyoutubedislikeapi.com
+- +.revenuecat.com
+- +.rogsvc.com
+- +.runanytime.hxi.me
+- +.simplesvg.com
+- +.smartryan.com
+- +.sun-panel.top
+- +.tailwindcss.com
+- +.theporndb.net
+- +.ultrarouter.org
+- +.unisvg.com
+- +.useforall.com
+- +.vipclaude.codes
+- +.xn--9kqz23b19z.com
+- +.xxlb.net
+- +.yxxb.eu.cc
+- +.zeasn.tv
