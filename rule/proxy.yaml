@@ -3,29 +3,7 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.aefd.nelreports.net
-  - +.analytics.ahrefs.com
-  - +.b40.frekxhjbgrzwxdkwhblroatyfs.com
-  - +.cdn.staticstack.net
-  - +.cfnav.me
-  - +.dsk7922.a5x9j.com
-  - +.dsk7922.l5v81.com
-  - +.epi.md3landapi.com
-  - +.fcount-api.webapp.easebar.com
-  - +.files.superbed.cc
-  - +.fr1.halomt.com
-  - +.gpich.md3landapi.com
-  - +.gpiv4.md3landapi.com
-  - +.hg.cfnav.me
-  - +.hj.cfnav.me
-  - +.liangxin.xyz
-  - +.media.cfnav.com
-  - +.re0.me
-  - +.ts10.hj260302818.top
-  - +.tx.cfnav.me
-  - +.umami.re0.me
-  - +.www.lexology.com
-  - +.www.uaa1234.com
+  - +.dasho.pqjc.site
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -33,6 +11,7 @@ payload:
 - +.7r.fit
 - +.847977.xyz
 - +.abrdns.com
+- +.aefd.nelreports.net
 - +.agentrouter.org
 - +.agsv.top
 - +.agsvpt.com
@@ -40,6 +19,7 @@ payload:
 - +.aiopenai.app
 - +.airav.io
 - +.ajay.app
+- +.analytics.ahrefs.com
 - +.anyrouter.top
 - +.api.42x.shop
 - +.api.ark717.com
@@ -50,7 +30,10 @@ payload:
 - +.avmoo.website
 - +.avsox.click
 - +.azurefd.us
+- +.b40.frekxhjbgrzwxdkwhblroatyfs.com
 - +.byd.skin
+- +.cdn.staticstack.net
+- +.cfnav.me
 - +.chybenzun.top
 - +.compute-pipe.com
 - +.cun.ai
@@ -59,18 +42,28 @@ payload:
 - +.de5.net
 - +.dicebear.com
 - +.dns11.quad9.net
+- +.dsk7922.a5x9j.com
+- +.dsk7922.l5v81.com
 - +.edgeong.wogg.333232.xyz
+- +.epi.md3landapi.com
 - +.evomap.ai
 - +.fanza.jp
 - +.fc2.com
+- +.fcount-api.webapp.easebar.com
+- +.files.superbed.cc
+- +.fr1.halomt.com
 - +.gateway996.com
 - +.gitkraken.com
 - +.gitkraken.dev
 - +.glitchtip.ddsrem.com
+- +.gpich.md3landapi.com
+- +.gpiv4.md3landapi.com
 - +.h-e.top
 - +.happycoding.xyz
+- +.hg.cfnav.me
 - +.hhanclub.net
 - +.hhhl.cc
+- +.hj.cfnav.me
 - +.iconify.design
 - +.imgccc.com
 - +.inggairav0.work
@@ -79,8 +72,10 @@ payload:
 - +.ip6.transmissionbt.com
 - +.javten.com
 - +.landian.la
+- +.liangxin.xyz
 - +.linux.do
 - +.maoyulin.xyz
+- +.media.cfnav.com
 - +.movie-pilot.org
 - +.muyuan.do
 - +.my.t4tv.hz.cz
@@ -89,6 +84,7 @@ payload:
 - +.nyc.mn
 - +.picx.cx
 - +.production.cloudflare.docker.com
+- +.re0.me
 - +.readfrog.app
 - +.registry-1.docker.io
 - +.restream.io
@@ -101,12 +97,17 @@ payload:
 - +.sun-panel.top
 - +.tailwindcss.com
 - +.theporndb.net
+- +.ts10.hj260302818.top
+- +.tx.cfnav.me
 - +.ultrarouter.org
+- +.umami.re0.me
 - +.unisvg.com
 - +.useforall.com
 - +.v2.langge.uk
 - +.v5.langge.uk
 - +.vipclaude.codes
+- +.www.lexology.com
+- +.www.uaa1234.com
 - +.xn--9kqz23b19z.com
 - +.xxlb.net
 - +.yxxb.eu.cc
