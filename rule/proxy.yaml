@@ -3,10 +3,29 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.edgeong.wogg.333232.xyz
-  - +.glitchtip.ddsrem.com
-  - +.ip6.transmissionbt.com
-  - +.my.t4tv.hz.cz
+  - +.aefd.nelreports.net
+  - +.analytics.ahrefs.com
+  - +.b40.frekxhjbgrzwxdkwhblroatyfs.com
+  - +.cdn.staticstack.net
+  - +.cfnav.me
+  - +.dsk7922.a5x9j.com
+  - +.dsk7922.l5v81.com
+  - +.epi.md3landapi.com
+  - +.fcount-api.webapp.easebar.com
+  - +.files.superbed.cc
+  - +.fr1.halomt.com
+  - +.gpich.md3landapi.com
+  - +.gpiv4.md3landapi.com
+  - +.hg.cfnav.me
+  - +.hj.cfnav.me
+  - +.liangxin.xyz
+  - +.media.cfnav.com
+  - +.re0.me
+  - +.ts10.hj260302818.top
+  - +.tx.cfnav.me
+  - +.umami.re0.me
+  - +.www.lexology.com
+  - +.www.uaa1234.com
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -40,12 +59,14 @@ payload:
 - +.de5.net
 - +.dicebear.com
 - +.dns11.quad9.net
+- +.edgeong.wogg.333232.xyz
 - +.evomap.ai
 - +.fanza.jp
 - +.fc2.com
 - +.gateway996.com
 - +.gitkraken.com
 - +.gitkraken.dev
+- +.glitchtip.ddsrem.com
 - +.h-e.top
 - +.happycoding.xyz
 - +.hhanclub.net
@@ -55,12 +76,14 @@ payload:
 - +.inggairav0.work
 - +.inggairav1.work
 - +.inggairav9.com
+- +.ip6.transmissionbt.com
 - +.javten.com
 - +.landian.la
 - +.linux.do
 - +.maoyulin.xyz
 - +.movie-pilot.org
 - +.muyuan.do
+- +.my.t4tv.hz.cz
 - +.nmnm.fun
 - +.ntfantasy.us
 - +.nyc.mn
