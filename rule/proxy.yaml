@@ -3,7 +3,8 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.dasho.pqjc.site
+  - +.huangguoai.com
+  - +.log-report.com
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -38,6 +39,7 @@ payload:
 - +.compute-pipe.com
 - +.cun.ai
 - +.dadi2026.com
+- +.dasho.pqjc.site
 - +.datadoghq.com
 - +.de5.net
 - +.dicebear.com
