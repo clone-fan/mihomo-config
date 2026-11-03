@@ -3,7 +3,8 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.mkwindflow999.com
+  - +.prompt.iwooji.com
+  - +.s3.uuu.ovh
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -79,6 +80,7 @@ payload:
 - +.log-report.com
 - +.maoyulin.xyz
 - +.media.cfnav.com
+- +.mkwindflow999.com
 - +.movie-pilot.org
 - +.muyuan.do
 - +.my.t4tv.hz.cz
