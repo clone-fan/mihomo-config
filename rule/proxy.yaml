@@ -3,8 +3,7 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.prompt.iwooji.com
-  - +.s3.uuu.ovh
+  - +.download.codebuddy.ai
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -89,6 +88,7 @@ payload:
 - +.nyc.mn
 - +.picx.cx
 - +.production.cloudflare.docker.com
+- +.prompt.iwooji.com
 - +.re0.me
 - +.readfrog.app
 - +.registry-1.docker.io
@@ -97,6 +97,7 @@ payload:
 - +.revenuecat.com
 - +.rogsvc.com
 - +.runanytime.hxi.me
+- +.s3.uuu.ovh
 - +.simplesvg.com
 - +.smartryan.com
 - +.sun-panel.top
