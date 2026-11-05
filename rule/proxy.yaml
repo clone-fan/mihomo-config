@@ -3,7 +3,7 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.download.codebuddy.ai
+  - +.keungliang.dpdns.org
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -43,6 +43,7 @@ payload:
 - +.de5.net
 - +.dicebear.com
 - +.dns11.quad9.net
+- +.download.codebuddy.ai
 - +.dsk7922.a5x9j.com
 - +.dsk7922.l5v81.com
 - +.edgeong.wogg.333232.xyz
