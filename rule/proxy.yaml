@@ -3,7 +3,10 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.live.ottiptv.cc
+  - +.api123.136470.xyz
+  - +.web4.52pokemon.cc
+  - +.www.xn--mes358aby2apfg.site
+  - +.xn--9kqs1lo79d.com
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -79,6 +82,7 @@ payload:
 - +.landian.la
 - +.liangxin.xyz
 - +.linux.do
+- +.live.ottiptv.cc
 - +.log-report.com
 - +.maoyulin.xyz
 - +.media.cfnav.com
