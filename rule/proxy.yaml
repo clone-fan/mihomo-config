@@ -3,8 +3,7 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.api.log6.space
-  - +.b02.bbniao.net
+  - +.cloudauth-device-dualstack.ap-southeast-1.aliyuncs.com
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -26,6 +25,7 @@ payload:
 - +.api.ark717.com
 - +.api.bitdrift.io
 - +.api.justwoker.icu
+- +.api.log6.space
 - +.api.tiffara.com
 - +.api123.136470.xyz
 - +.attemptd.work
@@ -33,6 +33,7 @@ payload:
 - +.avmoo.website
 - +.avsox.click
 - +.azurefd.us
+- +.b02.bbniao.net
 - +.b40.frekxhjbgrzwxdkwhblroatyfs.com
 - +.byd.skin
 - +.cdn.staticstack.net
