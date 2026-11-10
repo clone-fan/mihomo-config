@@ -3,7 +3,8 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.cloudauth-device-dualstack.ap-southeast-1.aliyuncs.com
+  - +.super.ffzy-online6.com
+  - +.www.libvio.pw
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -39,6 +40,7 @@ payload:
 - +.cdn.staticstack.net
 - +.cfnav.me
 - +.chybenzun.top
+- +.cloudauth-device-dualstack.ap-southeast-1.aliyuncs.com
 - +.compute-pipe.com
 - +.cun.ai
 - +.dadi2026.com
