@@ -3,8 +3,7 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.super.ffzy-online6.com
-  - +.www.libvio.pw
+  - +.xget.xi-xu.me
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -110,6 +109,7 @@ payload:
 - +.simplesvg.com
 - +.smartryan.com
 - +.sun-panel.top
+- +.super.ffzy-online6.com
 - +.tailwindcss.com
 - +.theporndb.net
 - +.ts10.hj260302818.top
@@ -123,6 +123,7 @@ payload:
 - +.vipclaude.codes
 - +.web4.52pokemon.cc
 - +.www.lexology.com
+- +.www.libvio.pw
 - +.www.uaa1234.com
 - +.www.xn--mes358aby2apfg.site
 - +.xn--9kqs1lo79d.com
