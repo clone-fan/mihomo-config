@@ -3,9 +3,8 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.btdcwd.0kjzpnf.app
-  - +.g3i8dg.5sti0en.app
-  - +.p6tpdy.5sti0en.app
+  - +.cdn.smartlink.intlgame.com
+  - +.sbzytpimg1.com
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -37,6 +36,7 @@ payload:
 - +.azurefd.us
 - +.b02.bbniao.net
 - +.b40.frekxhjbgrzwxdkwhblroatyfs.com
+- +.btdcwd.0kjzpnf.app
 - +.byd.skin
 - +.cdn.staticstack.net
 - +.cfnav.me
@@ -62,6 +62,7 @@ payload:
 - +.fcount-api.webapp.easebar.com
 - +.files.superbed.cc
 - +.fr1.halomt.com
+- +.g3i8dg.5sti0en.app
 - +.gateway996.com
 - +.gitkraken.com
 - +.gitkraken.dev
@@ -97,6 +98,7 @@ payload:
 - +.nmnm.fun
 - +.ntfantasy.us
 - +.nyc.mn
+- +.p6tpdy.5sti0en.app
 - +.picx.cx
 - +.production.cloudflare.docker.com
 - +.prompt.iwooji.com
