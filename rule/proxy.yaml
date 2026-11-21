@@ -3,8 +3,7 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.imoto-str.ane-h.xyz
-  - +.oppai-str.shoujo-h.org
+  - +.api.smoot.apple.cn
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -79,6 +78,7 @@ payload:
 - +.huangguoai.com
 - +.iconify.design
 - +.imgccc.com
+- +.imoto-str.ane-h.xyz
 - +.inggairav0.work
 - +.inggairav1.work
 - +.inggairav9.com
@@ -99,6 +99,7 @@ payload:
 - +.nmnm.fun
 - +.ntfantasy.us
 - +.nyc.mn
+- +.oppai-str.shoujo-h.org
 - +.p6tpdy.5sti0en.app
 - +.picx.cx
 - +.production.cloudflare.docker.com
