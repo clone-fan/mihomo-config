@@ -3,11 +3,13 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.b04.bbniao.net
-  - +.catai.wiki
-  - +.embed.tawk.to
-  - +.user.catai.wiki
-  - +.va.tawk.to
+  - +.c.v155p.com
+  - +.etahub.com
+  - +.lsbbf7.com
+  - +.nxxbfjx.com
+  - +.pix-ht.trafficjunky.net
+  - +.static.trafficjunky.com
+  - +.video.sacdnssedge.com
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -39,9 +41,11 @@ payload:
 - +.avsox.click
 - +.azurefd.us
 - +.b02.bbniao.net
+- +.b04.bbniao.net
 - +.b40.frekxhjbgrzwxdkwhblroatyfs.com
 - +.btdcwd.0kjzpnf.app
 - +.byd.skin
+- +.catai.wiki
 - +.cdn.smartlink.intlgame.com
 - +.cdn.staticstack.net
 - +.cfnav.me
@@ -60,6 +64,7 @@ payload:
 - +.dsk7922.a5x9j.com
 - +.dsk7922.l5v81.com
 - +.edgeong.wogg.333232.xyz
+- +.embed.tawk.to
 - +.epi.md3landapi.com
 - +.evomap.ai
 - +.fanza.jp
@@ -132,8 +137,10 @@ payload:
 - +.umami.re0.me
 - +.unisvg.com
 - +.useforall.com
+- +.user.catai.wiki
 - +.v2.langge.uk
 - +.v5.langge.uk
+- +.va.tawk.to
 - +.vipclaude.codes
 - +.web4.52pokemon.cc
 - +.www.lexology.com
