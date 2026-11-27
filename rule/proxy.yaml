@@ -3,7 +3,8 @@
 # Format: domain (for MRS via <<: *RDM)
 # Syntax: example.com exact; +.example.com suffix
 payload:
-  - +.nglbs-maps-overseas-static.nie.easebar.com
+  - +.aihuangdou.com
+  - +.app.95112475.xyz
 - +.0xpsyche.me
 - +.1e100cdn.net
 - +.42w.shop
@@ -104,6 +105,7 @@ payload:
 - +.movie-pilot.org
 - +.muyuan.do
 - +.my.t4tv.hz.cz
+- +.nglbs-maps-overseas-static.nie.easebar.com
 - +.nmnm.fun
 - +.ntfantasy.us
 - +.nxxbfjx.com
